@@ -3,9 +3,7 @@ package com.iwittenberg.advent.problem
 abstract class Day3Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int?) :
     ProblemPart<List<String>, Int>(2021, 3, part, testCaseAnswer, previouslySubmittedAnswer) {
 
-    override fun convertToInputType(rawInput: List<String>): List<String> {
-        return rawInput
-    }
+    override fun convertToInputType(rawInput: List<String>) = rawInput
 
     override fun getTestCaseInput(): String {
         return """

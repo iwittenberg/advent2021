@@ -10,7 +10,7 @@ abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         return rawInput.map { line ->
             val pairs = line.split(" -> ").map { pair ->
                 val values = pair.split(",")
-                Pair(values[0].toInt(), values[1].toInt())
+                values[0].toInt() to values[1].toInt()
             }
             Vent(pairs[0], pairs[1])
         }
@@ -40,9 +40,7 @@ abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
             }
         }
 
-        return hits.filter { entries ->
-            entries.value >= 2
-        }.count()
+        return hits.count { it.value >= 2 }
     }
 }
 
@@ -56,9 +54,7 @@ class Day5Part1 : Day5Part(1, 5, 4728) {
 
 @RunThis
 class Day5Part2 : Day5Part(2, 12, 17717) {
-    override fun solve(input: List<Vent>): Int {
-        return innerSolve(input)
-    }
+    override fun solve(input: List<Vent>) = innerSolve(input)
 }
 
 class Vent(

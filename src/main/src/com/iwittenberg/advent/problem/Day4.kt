@@ -115,11 +115,6 @@ class Board(numbers: List<Int>) {
         return markedRows == 5 || markedCols == 5
     }
 
-    fun score(): Int {
-        return spots.sumOf { if (it.marked) 0 else it.number }
-    }
-
-    override fun toString(): String {
-        return spots.joinToString { it.number.toString() }
-    }
+    fun score() = spots.sumOf { if (it.marked) 0 else it.number }
+    override fun toString() = spots.joinToString { it.number.toString() }
 }

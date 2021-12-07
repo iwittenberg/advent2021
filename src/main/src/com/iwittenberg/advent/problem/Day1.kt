@@ -18,9 +18,7 @@ abstract class Day1Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         """
     }
 
-    override fun convertToInputType(rawInput: List<String>): List<Int> {
-        return rawInput.map { it.toInt() }
-    }
+    override fun convertToInputType(rawInput: List<String>) = rawInput.map { it.toInt() }
 }
 
 @RunThis
