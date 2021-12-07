@@ -5,7 +5,7 @@ enum class Direction {
     FORWARD, DOWN, UP
 }
 
-abstract class Day2Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int?) :
+abstract class Day2Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int) :
     ProblemPart<List<Movement>, Int>(2021, 2, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Movement> {
