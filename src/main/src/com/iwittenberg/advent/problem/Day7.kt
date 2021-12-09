@@ -3,7 +3,7 @@ package com.iwittenberg.advent.problem
 import kotlin.math.abs
 import kotlin.math.round
 
-abstract class Day7Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long?) :
+abstract class Day7Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<Int>, Long>(2021, 7, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Int> = rawInput[0].split(",").map { it.toInt() }

@@ -1,6 +1,6 @@
 package com.iwittenberg.advent.problem
 
-abstract class Day1Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int?) :
+abstract class Day1Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<Int>, Int>(2021, 1, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun getTestCaseInput(): String {

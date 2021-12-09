@@ -1,8 +1,6 @@
 package com.iwittenberg.advent.problem
 
-import java.util.concurrent.TimeUnit
 import kotlin.system.measureNanoTime
-import kotlin.system.measureTimeMillis
 
 abstract class ProblemPart<T, A>(
     private val year: Int,

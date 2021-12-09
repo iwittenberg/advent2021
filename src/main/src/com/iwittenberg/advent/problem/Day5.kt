@@ -3,7 +3,7 @@ package com.iwittenberg.advent.problem
 import kotlin.math.abs
 import kotlin.math.max
 
-abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int?) :
+abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<Vent>, Int>(2021, 5, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Vent> {

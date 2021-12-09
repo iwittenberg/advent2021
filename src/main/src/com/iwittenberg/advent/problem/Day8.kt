@@ -2,7 +2,7 @@ package com.iwittenberg.advent.problem
 
 typealias SegmentOutput = Pair<List<String>, List<String>>
 
-abstract class Day8Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int?) :
+abstract class Day8Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<SegmentOutput>, Int>(2021, 8, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<SegmentOutput> {

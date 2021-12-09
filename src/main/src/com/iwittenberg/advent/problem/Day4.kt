@@ -1,6 +1,6 @@
 package com.iwittenberg.advent.problem
 
-abstract class Day4Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int?) :
+abstract class Day4Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<Pair<List<Int>, List<Board>>, Int>(2021, 4, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): Pair<List<Int>, List<Board>> {

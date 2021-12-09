@@ -1,6 +1,6 @@
 package com.iwittenberg.advent.problem
 
-abstract class Day6Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long?) :
+abstract class Day6Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<Int>, Long>(2021, 6, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Int> {
