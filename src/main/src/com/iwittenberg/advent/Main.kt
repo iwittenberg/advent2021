@@ -7,11 +7,11 @@ import kotlin.reflect.full.createInstance
 
 fun main() {
     val reflections = Reflections("com.iwittenberg.advent")
-    val classes = reflections.getTypesAnnotatedWith(RunThis::class.java)
-    classes.sortedBy { it.typeName }.forEach {
-        assert(ProblemPart::class.java.isAssignableFrom(it))
-
-        val instance: ProblemPart<*, *> = it.kotlin.createInstance() as ProblemPart<*, *>
-        instance.run()
-    }
+    val classes = reflections.getSubTypesOf(ProblemPart::class.java)
+    classes.filter { it.isAnnotationPresent(RunThis::class.java) }
+        .sortedBy { it.typeName }
+        .forEach {
+            val instance = it.kotlin.createInstance() as ProblemPart<*, *>
+            instance.run()
+        }
 }
