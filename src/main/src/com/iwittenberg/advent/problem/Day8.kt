@@ -51,6 +51,7 @@ class Day8Part2 : Day8Part(2, 61229, 1012272) {
     override fun solve(input: List<SegmentOutput>): Int {
         var total = 0
         input.forEach { line ->
+            
             var oneStr = ""
             var sevenStr = ""
             var fourStr = ""
@@ -68,66 +69,34 @@ class Day8Part2 : Day8Part(2, 61229, 1012272) {
                 }
             }
 
-            val a = getA(oneStr, sevenStr)
-            val cOrF = oneStr
-            val bOrD = getBOrD(cOrF, fourStr)
-            val eOrG = getEOrD(a, cOrF, bOrD, eightStr)
-            val threeStr = getThreeStr(cOrF, twoThreeOrFive)
-            val (e, g) = getEAndG(eOrG, threeStr)
-            val twoStr = getTwoStr(e, g, twoThreeOrFive)
-            val fiveStr = twoThreeOrFive.filter { it != twoStr }.single { it != threeStr }
-            val (c, d) = getCAndD(cOrF, bOrD, twoStr)
-            val b = bOrD.single { it != d }
-            val f = cOrF.single { it != c }
-            val zeroStr = getZeroStr(a, b, c, e, f, g, zeroSixOrNine)
-            val sixStr = getSixStr(a, b, d, e, f, g, zeroSixOrNine)
-            val nineStr = zeroSixOrNine.filter { it != zeroStr }.single { it != sixStr }
+            val sixStr = zeroSixOrNine.single { !it.containsAll(oneStr) }
+            val threeStr = twoThreeOrFive.single { it.containsAll(oneStr) }
+            val nineStr = zeroSixOrNine.single { it.containsAll(threeStr) }
+            val fiveStr = twoThreeOrFive.single { sixStr.containsAll(it) }
+            val twoStr = twoThreeOrFive.single { it != threeStr && it != fiveStr }
+            val zeroStr = zeroSixOrNine.single { it != sixStr && it != nineStr }
 
             val mapping = mapOf(
                 zeroStr.toSortedSet() to 0,
-                oneStr.toSortedSet()to 1,
-                twoStr.toSortedSet()to 2,
-                threeStr.toSortedSet()to 3,
-                fourStr.toSortedSet()to 4,
-                fiveStr.toSortedSet()to 5,
-                sixStr.toSortedSet()to 6,
-                sevenStr.toSortedSet()to 7,
-                eightStr.toSortedSet()to 8,
-                nineStr.toSortedSet()to 9
+                oneStr.toSortedSet() to 1,
+                twoStr.toSortedSet() to 2,
+                threeStr.toSortedSet() to 3,
+                fourStr.toSortedSet() to 4,
+                fiveStr.toSortedSet() to 5,
+                sixStr.toSortedSet() to 6,
+                sevenStr.toSortedSet() to 7,
+                eightStr.toSortedSet() to 8,
+                nineStr.toSortedSet() to 9
             )
 
             total += line.second.map { mapping[it.toSortedSet()] }.joinToString("").toInt()
         }
         return total
+
     }
 
-    private fun getA(oneStr: String, sevenStr: String) =  sevenStr.single { !oneStr.contains(it) }
-    private fun getBOrD(cOrF: String, fourStr: String) = fourStr.filter { !cOrF.contains(it) }
-    private fun getEOrD(a: Char, cOrF: String, bOrD: String, eightStr: String) = eightStr.filter { it != a }.filter { !cOrF.contains(it) }.filter { !bOrD.contains(it) }
-    private fun getEAndG(eOrG: String, threeStr: String) = eOrG.single { threeStr.contains(it) } to eOrG.single { !threeStr.contains(it) }
-    private fun getTwoStr(e: Char, g: Char, twoThreeOrFive: List<String>) = twoThreeOrFive.single { it.contains(e) && it.contains(g) }
-    private fun getCAndD(cOrF: String, bOrD: String, twoStr: String) =  cOrF.single { twoStr.contains(it) } to bOrD.single { twoStr.contains(it) }
-
-    private fun getThreeStr(cOrF: String, twoThreeOrFive: List<String>): String {
-        return twoThreeOrFive.single { number ->
-            cOrF.map { number.contains(it) }.count { it } == 2
-        }
+    private fun String.containsAll(chars: CharSequence): Boolean {
+        return chars.map { this.contains(it) }.all { it }
     }
-
-    private fun getZeroStr(a: Char, b: Char, c: Char, e: Char, f: Char, g: Char, zeroSixOrNine: List<String>): String {
-        return zeroSixOrNine.single {
-            it.contains(a) && it.contains(b) && it.contains(c) && it.contains(e) && it.contains(
-                f
-            ) && it.contains(g)
-        }
-    }
-
-    private fun getSixStr(a: Char, b: Char, d: Char, e: Char, f: Char, g: Char, zeroSixOrNine: List<String>): String {
-        return zeroSixOrNine.single {
-            it.contains(a) && it.contains(b) && it.contains(d) && it.contains(e) && it.contains(
-                f
-            ) && it.contains(g)
-        }
-    }
-
 }
+
