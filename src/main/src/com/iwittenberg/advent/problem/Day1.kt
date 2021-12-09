@@ -25,9 +25,9 @@ abstract class Day1Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
 class Day1Part1 : Day1Part(1, 7, 1557) {
     override fun solve(input: List<Int>): Int {
         var greaterThan = 0
-        for (i in 1 until input.size) {
-            val prev = input[i - 1]
-            val current = input[i]
+        (1 until input.size).forEach {
+            val prev = input[it - 1]
+            val current = input[it]
             if (current > prev) greaterThan++
         }
         return greaterThan
@@ -38,11 +38,11 @@ class Day1Part1 : Day1Part(1, 7, 1557) {
 class Day1Part2 : Day1Part(2, 5, 1608) {
     override fun solve(input: List<Int>): Int {
         var greaterThan = 0
-        for (i in 3 until input.size) {
-            val first = input[i - 3]
-            val second = input[i - 2]
-            val third = input[i - 1]
-            val fourth = input[i]
+        (3 until input.size).forEach {
+            val first = input[it - 3]
+            val second = input[it - 2]
+            val third = input[it - 1]
+            val fourth = input[it]
 
             val prev = first + second + third
             val current = second + third + fourth

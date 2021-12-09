@@ -71,8 +71,8 @@ class Vent(
 
         val pairs = mutableListOf<Pair<Int, Int>>()
         val range = max(abs(extent1.first - extent2.first), abs(extent1.second - extent2.second))
-        for (n in 0..range) {
-            pairs.add(Pair(extent1.first + (addX * n), extent1.second + (addY * n)))
+        (0..range).forEach {
+            pairs.add(Pair(extent1.first + (addX * it), extent1.second + (addY * it)))
         }
         return pairs
     }

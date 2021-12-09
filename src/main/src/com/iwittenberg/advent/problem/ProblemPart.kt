@@ -1,5 +1,9 @@
 package com.iwittenberg.advent.problem
 
+import java.util.concurrent.TimeUnit
+import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
+
 abstract class ProblemPart<T, A>(
     private val year: Int,
     private val day: Int,
@@ -16,18 +20,28 @@ abstract class ProblemPart<T, A>(
         println("Year $year Day $day Part $part")
 
         val sampleValues = convertToInputType(getSampleInput())
-        val sampleAnswer = solve(sampleValues)
+
+        var sampleAnswer: A
+        var time = measureNanoTime {
+            sampleAnswer = solve(sampleValues)
+        }
         try {
             assert(sampleAnswer == testCaseAnswer)
             println("Sample answers matched!")
+            println("Total time: ${time / 1e6} ms")
         } catch (e: AssertionError) {
             println("Result from the sample set of $sampleAnswer didn't match $testCaseAnswer, skipping real run")
+            println()
             return
         }
 
         val values = convertToInputType(getRealInput())
-        val answer = solve(values)
+        val answer: A
+        time = measureNanoTime {
+            answer = solve(values)
+        }
         println("Real input answer: $answer")
+        println("Total time: ${time / 1e6} ms")
         if (submittedAnswer != null) {
             try {
                 assert(submittedAnswer == answer)

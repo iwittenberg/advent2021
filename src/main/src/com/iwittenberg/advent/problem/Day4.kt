@@ -53,8 +53,8 @@ class Day4Part1 : Day4Part(1, 4512, 69579) {
         val picks = input.first
         val boards = input.second
 
-        for (pick in picks) {
-            for (board in boards) {
+        picks.forEach { pick ->
+            boards.forEach { board ->
                 if (board.mark(pick)) {
                     return board.score() * pick
                 }

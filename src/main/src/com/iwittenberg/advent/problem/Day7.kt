@@ -7,7 +7,7 @@ abstract class Day7Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnsw
     ProblemPart<List<Int>, Long>(2021, 7, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Int> = rawInput[0].split(",").map { it.toInt() }
-    override fun getTestCaseInput(): String = "16,1,2,0,4,2,7,1,2,14"
+    override fun getTestCaseInput() = "16,1,2,0,4,2,7,1,2,14"
 
 }
 
