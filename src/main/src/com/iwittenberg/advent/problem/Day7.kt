@@ -24,23 +24,13 @@ class Day7Part1 : Day7Part(1, 37, 349357) {
 @RunThis
 class Day7Part2 : Day7Part(2, 168, 96708205) {
     override fun solve(input: List<Int>): Long {
-        val average = round(input.sum().toDouble() / input.size.toDouble() ).toInt()
+        val average = round(input.sum().toDouble() / input.size.toDouble()).toInt()
 
-        val one = input.sumOf {
-            val n = abs(it - (average+1))
-            (n * (n + 1)) / 2
-        }.toLong()
-
-        val two = input.sumOf {
-            val n = abs(it - average)
-            (n * (n + 1)) / 2
-        }.toLong()
-
-        val three = input.sumOf {
-            val n = abs(it - (average-1))
-            (n * (n + 1)) / 2
-        }.toLong()
-
-        return minOf(one, two, three)
+        return ((average-1)..(average+1)).map { target ->
+            input.sumOf {
+                val n = abs(it - target)
+                (n * (n + 1)) / 2
+            }.toLong()
+        }.minOf { it }
     }
 }
