@@ -56,7 +56,7 @@ abstract class ProblemPart<T, A>(
     }
 
     private fun getRealInput(): List<String> {
-        var path = "/inputs/${year}/day${day}input"
+        var path = "/inputs/${year}/day${day}"
         if (usePartSpecificInput) {
             path += part.toString()
         }
