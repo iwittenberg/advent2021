@@ -39,10 +39,11 @@ abstract class ProblemPart<T, A>(
             answer = solve(values)
         }
         println("Real input answer: $answer")
-        println("Total time: ${time / 1e6} ms")
         if (submittedAnswer != null) {
             try {
                 assert(submittedAnswer == answer)
+                println("This matches the previously submitted answer!")
+                println("Total time: ${time / 1e6} ms")
             } catch (e: AssertionError) {
                 println("The newly computed answer of $answer didn't match $submittedAnswer from before!")
             }
