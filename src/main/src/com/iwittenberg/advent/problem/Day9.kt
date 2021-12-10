@@ -1,7 +1,8 @@
 package com.iwittenberg.advent.problem
 
 typealias Grid = List<List<Int>>
-private fun Grid.getOrMax(i: Int, j: Int) = this.getOrNull(i)?.getOrNull(j) ?: 9
+
+private fun Grid.getOrMax(point: Pair<Int, Int>) = this.getOrNull(point.first)?.getOrNull(point.second) ?: 9
 
 abstract class Day9Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<Grid, Int>(2021, 9, part, testCaseAnswer, previouslySubmittedAnswer) {
@@ -20,55 +21,53 @@ abstract class Day9Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         """.trimIndent()
     }
 
-    protected fun generateNeighbors(i: Int, j: Int) = listOf((i to j - 1), (i to j + 1), (i - 1 to j), (i + 1 to j))
-}
-
-@RunThis
-class Day9Part1 : Day9Part(1, 15) {
-    override fun solve(input: Grid): Int {
-        val list = mutableListOf<Int>()
-        (input.indices).forEach { row ->
-            (input[row].indices).forEach { col ->
-                val neighbors = generateNeighbors(row, col)
-                val current = input[row][col]
-
-                if (neighbors.all { current < input.getOrMax(it.first, it.second) }) {
-                    list.add(current)
-                }
-            }
-        }
-        return list.sumOf { it + 1 }
+    protected fun generateNeighbors(point: Pair<Int, Int>): List<Pair<Int, Int>> {
+        return listOf(
+            (point.first to point.second - 1),
+            (point.first to point.second + 1),
+            (point.first - 1 to point.second),
+            (point.first + 1 to point.second)
+        )
     }
 }
 
 @RunThis
-class Day9Part2 : Day9Part(2, 1134) {
+class Day9Part1 : Day9Part(1, 15, 504) {
     override fun solve(input: Grid): Int {
-        val basins = mutableListOf<Int>()
-        val visited = mutableListOf<Pair<Int, Int>>()
-        (input.indices).forEach { row ->
-            (input[row].indices).forEach { col ->
-                val flow = flow(input, row, col, visited)
-                if (flow > 0) basins.add(flow)
-            }
-        }
+        return input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
+            .filter { generateNeighbors(it).all { neighbor -> input[it.first][it.second] < input.getOrMax(neighbor) } }
+            .map { input.getOrMax(it)}
+            .sumOf { it + 1 }
+    }
+}
 
-        basins.sortDescending()
-        return basins[0] * basins[1] * basins[2]
+@RunThis
+class Day9Part2 : Day9Part(2, 1134, 1558722) {
+    override fun solve(input: Grid): Int {
+        return input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }.asSequence()
+            .filter { generateNeighbors(it).all { neighbor -> input[it.first][it.second] < input.getOrMax(neighbor) } }
+            .map { flow(input, it, mutableListOf()) }
+            .filterNot { it == 0 }
+            .sortedDescending()
+            .take(3)
+            .reduce { acc, i -> acc * i }
     }
 
-    private fun flow(input: Grid, row: Int, col: Int, visited: MutableList<Pair<Int, Int>>): Int {
-        if (visited.contains(row to col)) {
+    private fun flow(input: Grid, point: Pair<Int, Int>, visited: MutableList<Pair<Int, Int>>): Int {
+        if (visited.contains(point)) {
             return 0
         }
 
-        visited.add(row to col)
+        visited.add(point)
 
-        if (input.getOrMax(row, col) == 9) {
+        if (input.getOrMax(point) == 9) {
             return 0
         }
 
-        val pairs = generateNeighbors(row, col).filter { !visited.contains(it) }.filter { input.getOrMax(row, col) != 9 }
-        return 1 + pairs.sumOf { flow(input, it.first, it.second, visited) }
+        return 1 + generateNeighbors(point)
+            .filterNot { visited.contains(it) }
+            .filterNot { input.getOrMax(point) == 9 }
+            .map { flow(input, it, visited) }
+            .sumOf { it }
     }
 }
