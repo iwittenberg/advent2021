@@ -2,54 +2,66 @@ package com.iwittenberg.advent.problem
 
 import kotlin.system.measureNanoTime
 
+sealed interface PartResult<A>
+class TestCaseFailure<A>(
+    val testCaseResult: A,
+    val testCaseExpectation: A,
+    val testCaseRuntime: Long) : PartResult<A>
+class RealCaseFailure<A>(
+    val testCaseResult: A,
+    val testCaseRuntime: Long,
+    val realResult: A,
+    val expectedResult: A,
+    val realRuntime: Long) : PartResult<A>
+class RealCaseUnknownSolution<A>(
+    val testCaseResult: A,
+    val testCaseRuntime: Long,
+    val realResult: A,
+    val realRuntime: Long) : PartResult<A>
+class RealCase<A>(
+    val testCaseResult: A,
+    val testCaseRuntime: Long,
+    val realResult: A,
+    val realRuntime: Long) : PartResult<A>
+
 abstract class ProblemPart<T, A>(
-    private val year: Int,
-    private val day: Int,
-    private val part: Int,
-    private val testCaseAnswer: A,
-    private val submittedAnswer: A?,
+    val year: Int,
+    val day: Int,
+    val part: Int,
+    private val expectedTestCaseResult: A,
+    private val expectedRealAnswer: A?,
     private val usePartSpecificInput: Boolean = false
 ) {
     protected abstract fun solve(input: T): A
     protected abstract fun convertToInputType(rawInput: List<String>): T
     protected abstract fun getTestCaseInput(): String
 
-    fun run() {
-        println("Year $year Day $day Part $part")
-
+    fun run(): PartResult<A> {
         val sampleValues = convertToInputType(getSampleInput())
 
-        var sampleAnswer: A
-        var time = measureNanoTime {
-            sampleAnswer = solve(sampleValues)
+        var testCaseResult: A
+        val testCaseTime = measureNanoTime {
+            testCaseResult = solve(sampleValues)
         }
-        try {
-            assert(sampleAnswer == testCaseAnswer)
-            println("Sample answers matched!")
-            println("Total time: ${time / 1e6} ms")
-        } catch (e: AssertionError) {
-            println("Result from the sample set of $sampleAnswer didn't match $testCaseAnswer, skipping real run")
-            println()
-            return
+
+        if (testCaseResult != expectedTestCaseResult) {
+            return TestCaseFailure(testCaseResult, expectedTestCaseResult, testCaseTime)
         }
 
         val values = convertToInputType(getRealInput())
-        val answer: A
-        time = measureNanoTime {
-            answer = solve(values)
+        val result: A
+        val time = measureNanoTime {
+            result = solve(values)
         }
-        println("Real input answer: $answer")
-        if (submittedAnswer != null) {
-            try {
-                assert(submittedAnswer == answer)
-                println("This matches the previously submitted answer!")
-                println("Total time: ${time / 1e6} ms")
-            } catch (e: AssertionError) {
-                println("The newly computed answer of $answer didn't match $submittedAnswer from before!")
+        if (expectedRealAnswer != null) {
+            if (expectedRealAnswer != result) {
+                return RealCaseFailure(testCaseResult, testCaseTime, result, expectedRealAnswer, time)
+            } else {
+                return RealCase(testCaseResult, testCaseTime, result, time)
             }
         }
 
-        println()
+        return RealCaseUnknownSolution(testCaseResult, testCaseTime, result, time)
     }
 
     private fun getSampleInput(): List<String> {
