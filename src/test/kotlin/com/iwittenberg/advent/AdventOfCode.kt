@@ -1,15 +1,13 @@
 package com.iwittenberg.advent
 
 import com.iwittenberg.advent.problem.ProblemPart
-import com.iwittenberg.advent.problem.RunThis
+import com.iwittenberg.advent.util.getProblemPartsToRun
 import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.TestMethodOrder
-import org.reflections.Reflections
-import kotlin.reflect.full.createInstance
 import kotlin.system.measureNanoTime
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -17,15 +15,7 @@ import kotlin.test.fail
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class AdventOfCode {
 
-    private val reflections = Reflections("com.iwittenberg.advent")
-    private val classes =
-        reflections.getSubTypesOf(ProblemPart::class.java).filter { it.isAnnotationPresent(RunThis::class.java) }
-    private val onlyThis =
-        classes.filter { (it.annotations.find { annotation -> annotation is RunThis } as RunThis).andOnlyThis }
-    private val toRun = when (onlyThis.size) {
-        1 -> listOf(onlyThis.single().kotlin.createInstance() as ProblemPart<*, *>)
-        else -> classes.map { it.kotlin.createInstance() as ProblemPart<*, *> }
-    }.sortedWith(ProblemPart.naturalOrder).groupBy { it.year to it.day }
+    private val toRun = getProblemPartsToRun()
 
     @TestFactory
     @Order(1)
@@ -36,7 +26,6 @@ class AdventOfCode {
 
                 DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
                     failIfThrown(throwable)
-
                     assertEquals(it.expectedTestCaseResult, result, "Sample case didn't match")
                 }
             }
