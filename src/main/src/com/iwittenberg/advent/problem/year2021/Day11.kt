@@ -7,7 +7,7 @@ import com.iwittenberg.advent.util.Point2d
 import com.iwittenberg.advent.util.generateAllNeighbors
 import com.iwittenberg.advent.util.gridValue
 import com.iwittenberg.advent.util.increment
-import com.iwittenberg.advent.util.reset
+import com.iwittenberg.advent.util.set
 
 abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<MutableGrid, Long>(2021, 11, part, testCaseAnswer, previouslySubmittedAnswer) {
@@ -55,7 +55,7 @@ class Day11Part1 : Day11Part(1, 1656, 1667) {
         return (0 until 100).sumOf { _ ->
             val flashed = mutableSetOf<Point2d>()
             points.forEach { charge(input, it, input.generateAllNeighbors(it), flashed) }
-            flashed.forEach { input.reset(it) }
+            flashed.forEach { input.set(it, 0) }
 
             flashed.size.toLong()
         }
@@ -72,7 +72,7 @@ class Day11Part2 : Day11Part(2, 195, 488) {
             i++
             val flashed = mutableSetOf<Point2d>()
             points.forEach { charge(input, it, input.generateAllNeighbors(it), flashed) }
-            flashed.forEach { input.reset(it) }
+            flashed.forEach { input.set(it, 0) }
             if (flashed.size == points.size) return i.toLong()
         }
     }

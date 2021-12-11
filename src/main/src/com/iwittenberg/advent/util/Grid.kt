@@ -13,17 +13,17 @@ fun Grid.generateOrthogonalNeighbors(point: Point2d): List<Point2d> {
     ).filter { this.pointIsValid(it) }
 }
 
-fun Grid.generateAllNeighbors(point: Point2d): List<Point2d> {
+fun Grid.generateDiagonalNeighbors(point: Point2d): List<Point2d> {
     return listOf(
-        (point.first to point.second - 1),
-        (point.first to point.second + 1),
-        (point.first - 1 to point.second),
-        (point.first + 1 to point.second),
         (point.first - 1 to point.second - 1),
         (point.first + 1 to point.second - 1),
         (point.first - 1 to point.second + 1),
         (point.first + 1 to point.second + 1),
     ).filter { this.pointIsValid(it) }
+}
+
+fun Grid.generateAllNeighbors(point: Point2d): List<Point2d> {
+    return listOf(this.generateOrthogonalNeighbors(point), this.generateDiagonalNeighbors(point)).flatten()
 }
 
 private fun Grid.pointIsValid(it: Point2d): Boolean {
@@ -32,11 +32,15 @@ private fun Grid.pointIsValid(it: Point2d): Boolean {
 }
 
 fun MutableGrid.increment(point: Point2d) {
-    this[point.first][point.second]++
+    this.add(point, 1)
 }
 
-fun MutableGrid.reset(point: Point2d) {
-    this[point.first][point.second] = 0
+fun MutableGrid.add(point: Point2d, amount: Int) {
+    this[point.first][point.second] += amount
+}
+
+fun MutableGrid.set(point: Point2d, value: Int) {
+    this[point.first][point.second] = value
 }
 
 fun Grid.gridValue(point: Point2d): Int {
