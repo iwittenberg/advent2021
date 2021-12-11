@@ -1,4 +1,7 @@
-package com.iwittenberg.advent.problem
+package com.iwittenberg.advent.problem.year2021
+
+import com.iwittenberg.advent.problem.ProblemPart
+import com.iwittenberg.advent.problem.RunThis
 
 abstract class Day6Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<Int>, Long>(2021, 6, part, testCaseAnswer, previouslySubmittedAnswer) {

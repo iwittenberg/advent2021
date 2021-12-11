@@ -1,5 +1,7 @@
-package com.iwittenberg.advent.problem
+package com.iwittenberg.advent.problem.year2021
 
+import com.iwittenberg.advent.problem.ProblemPart
+import com.iwittenberg.advent.problem.RunThis
 import kotlin.math.abs
 import kotlin.math.max
 

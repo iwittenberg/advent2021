@@ -1,14 +1,16 @@
-package com.iwittenberg.advent.problem
+package com.iwittenberg.advent.problem.year2021
 
-import com.iwittenberg.advent.util.IntGrid
+import com.iwittenberg.advent.problem.ProblemPart
+import com.iwittenberg.advent.problem.RunThis
+import com.iwittenberg.advent.util.Grid
+import com.iwittenberg.advent.util.Point2d
 import com.iwittenberg.advent.util.generateOrthogonalNeighbors
-
-private fun IntGrid.getOrMax(point: Pair<Int, Int>) = this.getOrNull(point.first)?.getOrNull(point.second) ?: 9
+import com.iwittenberg.advent.util.gridValue
 
 abstract class Day9Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
-    ProblemPart<IntGrid, Int>(2021, 9, part, testCaseAnswer, previouslySubmittedAnswer) {
+    ProblemPart<Grid, Int>(2021, 9, part, testCaseAnswer, previouslySubmittedAnswer) {
 
-    override fun convertToInputType(rawInput: List<String>): IntGrid {
+    override fun convertToInputType(rawInput: List<String>): Grid {
         return rawInput.map { row -> row.map { col -> col.digitToInt() }.toMutableList() }
     }
 
@@ -25,19 +27,19 @@ abstract class Day9Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
 
 @RunThis
 class Day9Part1 : Day9Part(1, 15, 504) {
-    override fun solve(input: IntGrid): Int {
+    override fun solve(input: Grid): Int {
         return input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
-            .filter { input.generateOrthogonalNeighbors(it).all { neighbor -> input[it.first][it.second] < input.getOrMax(neighbor) } }
-            .map { input.getOrMax(it)}
+            .filter { input.generateOrthogonalNeighbors(it).all { neighbor -> input[it.first][it.second] < input.gridValue(neighbor) } }
+            .map { input.gridValue(it)}
             .sumOf { it + 1 }
     }
 }
 
 @RunThis
 class Day9Part2 : Day9Part(2, 1134, 1558722) {
-    override fun solve(input: IntGrid): Int {
+    override fun solve(input: Grid): Int {
         return input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }.asSequence()
-            .filter { input.generateOrthogonalNeighbors(it).all { neighbor -> input[it.first][it.second] < input.getOrMax(neighbor) } }
+            .filter { input.generateOrthogonalNeighbors(it).all { neighbor -> input[it.first][it.second] < input.gridValue(neighbor) } }
             .map { flow(input, it, mutableListOf()) }
             .filterNot { it == 0 }
             .sortedDescending()
@@ -45,20 +47,20 @@ class Day9Part2 : Day9Part(2, 1134, 1558722) {
             .reduce { acc, i -> acc * i }
     }
 
-    private fun flow(input: IntGrid, point: Pair<Int, Int>, visited: MutableList<Pair<Int, Int>>): Int {
+    private fun flow(input: Grid, point: Point2d, visited: MutableList<Point2d>): Int {
         if (visited.contains(point)) {
             return 0
         }
 
         visited.add(point)
 
-        if (input.getOrMax(point) == 9) {
+        if (input.gridValue(point) == 9) {
             return 0
         }
 
         return 1 + input.generateOrthogonalNeighbors(point)
             .filterNot { visited.contains(it) }
-            .filterNot { input.getOrMax(point) == 9 }
+            .filterNot { input.gridValue(point) == 9 }
             .map { flow(input, it, visited) }
             .sumOf { it }
     }

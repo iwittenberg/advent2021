@@ -1,75 +1,19 @@
 package com.iwittenberg.advent.problem
 
-import kotlin.system.measureNanoTime
-
-sealed interface PartResult<A>
-class TestCaseFailure<A>(
-    val testCaseResult: A,
-    val testCaseExpectation: A,
-    val testCaseRuntime: Long
-) : PartResult<A>
-
-class RealCaseFailure<A>(
-    val testCaseResult: A,
-    val testCaseRuntime: Long,
-    val realResult: A,
-    val expectedResult: A,
-    val realRuntime: Long
-) : PartResult<A>
-
-class RealCaseUnknownSolution<A>(
-    val testCaseResult: A,
-    val testCaseRuntime: Long,
-    val realResult: A,
-    val realRuntime: Long
-) : PartResult<A>
-
-class RealCase<A>(
-    val testCaseResult: A,
-    val testCaseRuntime: Long,
-    val realResult: A,
-    val realRuntime: Long
-) : PartResult<A>
-
 abstract class ProblemPart<T, A>(
     val year: Int,
     val day: Int,
     val part: Int,
-    private val expectedTestCaseResult: A,
-    private val expectedRealAnswer: A?,
+    val expectedTestCaseResult: A,
+    val expectedRealAnswer: A?,
     private val usePartSpecificInput: Boolean = false
 ) {
     protected abstract fun solve(input: T): A
     protected abstract fun convertToInputType(rawInput: List<String>): T
     protected abstract fun getTestCaseInput(): String
 
-    fun run(): PartResult<A> {
-        val sampleValues = convertToInputType(getSampleInput())
-
-        var testCaseResult: A
-        val testCaseTime = measureNanoTime {
-            testCaseResult = solve(sampleValues)
-        }
-
-        if (testCaseResult != expectedTestCaseResult) {
-            return TestCaseFailure(testCaseResult, expectedTestCaseResult, testCaseTime)
-        }
-
-        val values = convertToInputType(getRealInput())
-        val result: A
-        val time = measureNanoTime {
-            result = solve(values)
-        }
-        if (expectedRealAnswer != null) {
-            if (expectedRealAnswer != result) {
-                return RealCaseFailure(testCaseResult, testCaseTime, result, expectedRealAnswer, time)
-            } else {
-                return RealCase(testCaseResult, testCaseTime, result, time)
-            }
-        }
-
-        return RealCaseUnknownSolution(testCaseResult, testCaseTime, result, time)
-    }
+    fun solveSample() = solve(convertToInputType(getSampleInput()))
+    fun solveReal() = solve(convertToInputType(getRealInput()))
 
     private fun getSampleInput(): List<String> {
         return getTestCaseInput().parseAsInput()
@@ -93,22 +37,6 @@ abstract class ProblemPart<T, A>(
     }
 
     companion object {
-        val naturalOrder = Comparator<Pair<ProblemPart<*, *>, PartResult<*>>> { a, b ->
-            val aSimpleName = a.first.javaClass.simpleName
-            val bSimpleName = b.first.javaClass.simpleName
-            val aDay = aSimpleName.substring(3, aSimpleName.indexOf('P')).toInt()
-            val bDay = bSimpleName.substring(3, bSimpleName.indexOf('P')).toInt()
-            val aPart = aSimpleName[aSimpleName.length - 1].digitToInt()
-            val bPart = bSimpleName[bSimpleName.length - 1].digitToInt()
-            when {
-                aDay < bDay -> -1
-                aDay > bDay -> 1
-                else -> when {
-                    aPart < bPart -> -1
-                    aPart > bPart -> 1
-                    else -> 0
-                }
-            }
-        }
+        val naturalOrder = compareBy<ProblemPart<*, *>> { it.year }.thenBy { it.day }.thenBy { it.part }
     }
 }
