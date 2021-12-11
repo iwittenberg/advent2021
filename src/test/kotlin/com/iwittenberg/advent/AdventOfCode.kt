@@ -12,15 +12,16 @@ import org.reflections.Reflections
 import kotlin.reflect.full.createInstance
 import kotlin.system.measureNanoTime
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.fail
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class AdventOfCode {
 
     private val reflections = Reflections("com.iwittenberg.advent")
-    private val classes = reflections.getSubTypesOf(ProblemPart::class.java).filter { it.isAnnotationPresent(RunThis::class.java) }
-    private val onlyThis = classes.filter { (it.annotations.find { annotation -> annotation is RunThis } as RunThis).andOnlyThis }
+    private val classes =
+        reflections.getSubTypesOf(ProblemPart::class.java).filter { it.isAnnotationPresent(RunThis::class.java) }
+    private val onlyThis =
+        classes.filter { (it.annotations.find { annotation -> annotation is RunThis } as RunThis).andOnlyThis }
     private val toRun = when (onlyThis.size) {
         1 -> listOf(onlyThis.single().kotlin.createInstance() as ProblemPart<*, *>)
         else -> classes.map { it.kotlin.createInstance() as ProblemPart<*, *> }
@@ -31,12 +32,12 @@ class AdventOfCode {
     fun `sample case`(): List<DynamicContainer> {
         return toRun.map { group ->
             val tests = group.value.map {
-                var testCaseResult: Any?
-                val testCaseTime = measureNanoTime {
-                    testCaseResult = it.solveSample()
-                }
-                DynamicTest.dynamicTest("Part ${it.part} - ${testCaseTime / 1e6}ms") {
-                    assertEquals(it.expectedTestCaseResult, testCaseResult, "Sample case didn't match")
+                val (result, time, throwable) = runSolveFunc(it, ProblemPart<*, *>::solveSample)
+
+                DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
+                    failIfThrown(throwable)
+
+                    assertEquals(it.expectedTestCaseResult, result, "Sample case didn't match")
                 }
             }
             DynamicContainer.dynamicContainer("${group.key.first} Day ${group.key.second}", tests)
@@ -48,18 +49,18 @@ class AdventOfCode {
     fun `real case - regression`(): List<DynamicContainer> {
         return toRun.map { group ->
             val tests = group.value.filterNot { it.expectedRealAnswer == null }.map {
-                var result: Any?
-                val time = measureNanoTime {
-                    result = it.solveReal()
-                }
+                val (result, time, throwable) = runSolveFunc(it)
 
                 DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
+                    failIfThrown(throwable)
+
                     System.out.format(
                         "%-18s - %s\n",
                         "${it.year} Day ${it.day} Part ${it.part}",
                         "Got $result in ${time / 1e6}ms"
                     )
-                    assertEquals(it.expectedRealAnswer, result, "Sample solution didn't match")
+
+                    assertEquals(it.expectedRealAnswer, result, "This problem has regressed and no longer matches the reported previously correct solution")
                 }
             }
             DynamicContainer.dynamicContainer("${group.key.first} Day ${group.key.second}", tests)
@@ -71,26 +72,44 @@ class AdventOfCode {
     fun `real case - no known solution`(): List<DynamicContainer> {
         return toRun.map { group ->
             val tests = group.value.filter { it.expectedRealAnswer == null }.map {
-                var result: Any?
-                val time = measureNanoTime {
-                    result = it.solveReal()
-                }
+                val (result, time, throwable) = runSolveFunc(it)
 
                 DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
+                    failIfThrown(throwable)
+
                     System.out.format(
                         "%-18s - %s\n",
                         "${it.year} Day ${it.day} Part ${it.part}",
                         "Got $result in ${time / 1e6}ms"
                     )
+
                     fail("No actual answer provided - if this is correct, consider updating the corresponding ProblemPart")
                 }
             }
 
-            if (tests.isEmpty()) {
-                null
-            } else {
-                DynamicContainer.dynamicContainer("${group.key.first} Day ${group.key.second}", tests)
+            when(tests.isNotEmpty()) {
+                true -> DynamicContainer.dynamicContainer("${group.key.first} Day ${group.key.second}", tests)
+                else -> null
             }
-        }.filterNot { it == null }.map { it!! }
+        }.filterNotNull().map { it }
+    }
+
+    private fun failIfThrown(t: Throwable?) {
+        if (t != null) {
+            fail("Test failed due to thrown exception, $t")
+        }
+    }
+
+    private fun runSolveFunc(part: ProblemPart<*, *>, solveFunc: (ProblemPart<*, *>) -> Any? = ProblemPart<*, *>::solveReal): Triple<Any?, Long, Throwable?> {
+        var result: Any? = null
+        var throwable: Throwable? = null
+        val time = measureNanoTime {
+            try {
+                result = solveFunc.invoke(part)
+            } catch (t: Throwable) {
+                throwable = t
+            }
+        }
+        return Triple(result, time, throwable)
     }
 }
