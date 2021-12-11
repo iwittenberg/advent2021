@@ -6,23 +6,30 @@ sealed interface PartResult<A>
 class TestCaseFailure<A>(
     val testCaseResult: A,
     val testCaseExpectation: A,
-    val testCaseRuntime: Long) : PartResult<A>
+    val testCaseRuntime: Long
+) : PartResult<A>
+
 class RealCaseFailure<A>(
     val testCaseResult: A,
     val testCaseRuntime: Long,
     val realResult: A,
     val expectedResult: A,
-    val realRuntime: Long) : PartResult<A>
+    val realRuntime: Long
+) : PartResult<A>
+
 class RealCaseUnknownSolution<A>(
     val testCaseResult: A,
     val testCaseRuntime: Long,
     val realResult: A,
-    val realRuntime: Long) : PartResult<A>
+    val realRuntime: Long
+) : PartResult<A>
+
 class RealCase<A>(
     val testCaseResult: A,
     val testCaseRuntime: Long,
     val realResult: A,
-    val realRuntime: Long) : PartResult<A>
+    val realRuntime: Long
+) : PartResult<A>
 
 abstract class ProblemPart<T, A>(
     val year: Int,
@@ -73,7 +80,8 @@ abstract class ProblemPart<T, A>(
         if (usePartSpecificInput) {
             path += part.toString()
         }
-        return path.resourceContents()?.parseAsInput() ?: throw IllegalArgumentException("Unable to find input file for $path")
+        return path.resourceContents()?.parseAsInput()
+            ?: throw IllegalArgumentException("Unable to find input file for $path")
     }
 
     private fun String.parseAsInput(): List<String> {
@@ -82,5 +90,25 @@ abstract class ProblemPart<T, A>(
 
     private fun String.resourceContents(): String? {
         return {}.javaClass.getResource(this)?.readText()
+    }
+
+    companion object {
+        val naturalOrder = Comparator<Pair<ProblemPart<*, *>, PartResult<*>>> { a, b ->
+            val aSimpleName = a.first.javaClass.simpleName
+            val bSimpleName = b.first.javaClass.simpleName
+            val aDay = aSimpleName.substring(3, aSimpleName.indexOf('P')).toInt()
+            val bDay = bSimpleName.substring(3, bSimpleName.indexOf('P')).toInt()
+            val aPart = aSimpleName[aSimpleName.length - 1].digitToInt()
+            val bPart = bSimpleName[bSimpleName.length - 1].digitToInt()
+            when {
+                aDay < bDay -> -1
+                aDay > bDay -> 1
+                else -> when {
+                    aPart < bPart -> -1
+                    aPart > bPart -> 1
+                    else -> 0
+                }
+            }
+        }
     }
 }
