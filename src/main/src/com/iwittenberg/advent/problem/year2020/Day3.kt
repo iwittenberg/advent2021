@@ -51,7 +51,7 @@ class Day3Part1 : Day3Part(1, 7, 242) {
     }
 }
 
-@RunThis(true)
+@RunThis
 class Day3Part2 : Day3Part(2, 336, 2265549792) {
     override fun solve(input: Grid<Char>): Long {
         return checkForTrees(input, 1 to 1) *
