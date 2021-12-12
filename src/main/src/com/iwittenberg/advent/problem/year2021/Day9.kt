@@ -8,26 +8,26 @@ import com.iwittenberg.advent.util.generateOrthogonalNeighbors
 import com.iwittenberg.advent.util.gridFromInput
 import com.iwittenberg.advent.util.valueAt
 
-abstract class Day9Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
+abstract class Day9Part(part: Int, testCaseAnswer: List<Int>, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<IntGrid, Int>(2021, 9, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): IntGrid {
         return gridFromInput(rawInput, Char::digitToInt)
     }
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             2199943210
             3987894921
             9856789892
             8767896789
             9899965678
-        """.trimIndent()
+        """.trimIndent())
     }
 }
 
 @RunThis
-class Day9Part1 : Day9Part(1, 15, 504) {
+class Day9Part1 : Day9Part(1, listOf(15), 504) {
     override fun solve(input: IntGrid): Int {
         return input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
             .filter { input.generateOrthogonalNeighbors(it).all { neighbor -> input[it.first][it.second] < input.valueAt(neighbor) } }
@@ -37,7 +37,7 @@ class Day9Part1 : Day9Part(1, 15, 504) {
 }
 
 @RunThis
-class Day9Part2 : Day9Part(2, 1134, 1558722) {
+class Day9Part2 : Day9Part(2, listOf(1134), 1558722) {
     override fun solve(input: IntGrid): Int {
         return input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }.asSequence()
             .filter { input.generateOrthogonalNeighbors(it).all { neighbor -> input[it.first][it.second] < input.valueAt(neighbor) } }

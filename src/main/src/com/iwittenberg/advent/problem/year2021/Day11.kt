@@ -10,15 +10,15 @@ import com.iwittenberg.advent.util.increment
 import com.iwittenberg.advent.util.mutableGridFromInput
 import com.iwittenberg.advent.util.set
 
-abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
+abstract class Day11Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<MutableIntGrid, Long>(2021, 11, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): MutableIntGrid {
         return mutableGridFromInput(rawInput, Char::digitToInt)
     }
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             5483143223
             2745854711
             5264556173
@@ -29,7 +29,7 @@ abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
             6882881134
             4846848554
             5283751526
-        """.trimIndent()
+        """.trimIndent())
     }
 
     fun charge(input: MutableIntGrid, point: Point2d, neighbors: List<Point2d>, flashed: MutableSet<Point2d>) {
@@ -49,7 +49,7 @@ abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
 
 
 @RunThis
-class Day11Part1 : Day11Part(1, 1656, 1667) {
+class Day11Part1 : Day11Part(1, listOf(1656), 1667) {
     override fun solve(input: MutableIntGrid): Long {
         val points = input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
 
@@ -64,7 +64,7 @@ class Day11Part1 : Day11Part(1, 1656, 1667) {
 }
 
 @RunThis
-class Day11Part2 : Day11Part(2, 195, 488) {
+class Day11Part2 : Day11Part(2, listOf(195), 488) {
     override fun solve(input: MutableIntGrid): Long {
         val points = input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
 

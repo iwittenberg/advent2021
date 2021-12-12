@@ -3,13 +3,13 @@ package com.iwittenberg.advent.problem.year2021
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 
-abstract class Day3Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
+abstract class Day3Part(part: Int, testCaseAnswer: List<Int>, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<String>, Int>(2021, 3, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>) = rawInput
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             00100
             11110
             10110
@@ -22,12 +22,12 @@ abstract class Day3Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
             11001
             00010
             01010
-        """
+        """)
     }
 }
 
 @RunThis
-class Day3Part1 : Day3Part(1, 198, 2250414) {
+class Day3Part1 : Day3Part(1, listOf(198), 2250414) {
     override fun solve(input: List<String>): Int {
         val length = input[0].length
 
@@ -53,7 +53,7 @@ class Day3Part1 : Day3Part(1, 198, 2250414) {
 }
 
 @RunThis
-class Day3Part2 : Day3Part(2, 230, 6085575) {
+class Day3Part2 : Day3Part(2, listOf(230), 6085575) {
     override fun solve(input: List<String>): Int {
         val oxygenValue = processList(input.toMutableList())
         val co2Value = processList(input.toMutableList(), true)

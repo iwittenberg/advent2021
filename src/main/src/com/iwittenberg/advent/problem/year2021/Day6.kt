@@ -3,14 +3,14 @@ package com.iwittenberg.advent.problem.year2021
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 
-abstract class Day6Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
+abstract class Day6Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<Int>, Long>(2021, 6, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Int> {
         return rawInput[0].split(",").map { it.toInt() }
     }
 
-    override fun getTestCaseInput() = "3,4,3,1,2"
+    override fun getTestCaseInput() = listOf("3,4,3,1,2")
 
     fun solveInternal(input: List<Int>, days: Int): Long {
         var fish = mutableMapOf<Int, Long>()
@@ -34,11 +34,11 @@ abstract class Day6Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnsw
 }
 
 @RunThis
-class Day6Part1 : Day6Part(1, 5934, 391888) {
+class Day6Part1 : Day6Part(1, listOf(5934), 391888) {
     override fun solve(input: List<Int>) = solveInternal(input, 80)
 }
 
 @RunThis
-class Day6Part2 : Day6Part(2, 26984457539, 1754597645339) {
+class Day6Part2 : Day6Part(2, listOf(26984457539), 1754597645339) {
     override fun solve(input: List<Int>) = solveInternal(input, 256)
 }

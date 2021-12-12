@@ -4,13 +4,13 @@ import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 import kotlin.collections.ArrayDeque
 
-abstract class Day10Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
+abstract class Day10Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<String>, Long>(2021, 10, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>) = rawInput
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             [({(<(())[]>[[{[]{<()<>>
             [(()[<>])]({[<{<<[]>>(
             {([(<{}[<>[]}>{[]{[(<()>
@@ -21,7 +21,7 @@ abstract class Day10Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
             [<(<(<(<{}))><([]([]()
             <{([([[(<>()){}]>(<<{{
             <{([{{}}[<[[[<>{}]]]>[]]
-        """.trimIndent()
+        """.trimIndent())
     }
 
     private val mapping = mapOf(
@@ -53,7 +53,7 @@ abstract class Day10Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
 }
 
 @RunThis
-class Day10Part1 : Day10Part(1, 26397, 288291) {
+class Day10Part1 : Day10Part(1, listOf(26397), 288291) {
 
     private val score = mapOf<Char, Long>(
         ')' to 3,
@@ -70,7 +70,7 @@ class Day10Part1 : Day10Part(1, 26397, 288291) {
 }
 
 @RunThis
-class Day10Part2 : Day10Part(2, 288957, 820045242) {
+class Day10Part2 : Day10Part(2, listOf(288957), 820045242) {
 
     private val score = mapOf<Char, Long>(
         ')' to 1,

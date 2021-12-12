@@ -3,11 +3,11 @@ package com.iwittenberg.advent.problem.year2021
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 
-abstract class Day1Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
+abstract class Day1Part(part: Int, testCaseAnswer: List<Int>, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<Int>, Int>(2021, 1, part, testCaseAnswer, previouslySubmittedAnswer) {
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             199
             200
             208
@@ -18,14 +18,14 @@ abstract class Day1Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
             269
             260
             263
-        """
+        """)
     }
 
     override fun convertToInputType(rawInput: List<String>) = rawInput.map { it.toInt() }
 }
 
 @RunThis
-class Day1Part1 : Day1Part(1, 7, 1557) {
+class Day1Part1 : Day1Part(1, listOf(7), 1557) {
     override fun solve(input: List<Int>): Int {
         var greaterThan = 0
         (1 until input.size).forEach {
@@ -38,7 +38,7 @@ class Day1Part1 : Day1Part(1, 7, 1557) {
 }
 
 @RunThis
-class Day1Part2 : Day1Part(2, 5, 1608) {
+class Day1Part2 : Day1Part(2, listOf(5), 1608) {
     override fun solve(input: List<Int>): Int {
         var greaterThan = 0
         (3 until input.size).forEach {

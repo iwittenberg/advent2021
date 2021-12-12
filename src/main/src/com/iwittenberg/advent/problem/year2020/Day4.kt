@@ -3,7 +3,7 @@ package com.iwittenberg.advent.problem.year2020
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 
-abstract class Day4Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
+abstract class Day4Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<Map<String, String>>, Long>(2020, 4, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     companion object {
@@ -45,9 +45,9 @@ abstract class Day4Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnsw
 }
 
 @RunThis
-class Day4Part1 : Day4Part(1, 2, 228) {
-    override fun getTestCaseInput(): String {
-        return """
+class Day4Part1 : Day4Part(1, listOf(2), 228) {
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
             byr:1937 iyr:2017 cid:147 hgt:183cm
             
@@ -61,7 +61,7 @@ class Day4Part1 : Day4Part(1, 2, 228) {
             
             hcl:#cfa07d eyr:2025 pid:166559648
             iyr:2011 ecl:brn hgt:59in
-        """.trimIndent()
+        """.trimIndent())
     }
 
     override fun solve(input: List<Map<String, String>>): Long {
@@ -71,9 +71,9 @@ class Day4Part1 : Day4Part(1, 2, 228) {
 }
 
 @RunThis
-class Day4Part2 : Day4Part(2, 4, 175) {
-    override fun getTestCaseInput(): String {
-        return """
+class Day4Part2 : Day4Part(2, listOf(4), 175) {
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             eyr:1972 cid:100
             hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
             
@@ -100,7 +100,7 @@ class Day4Part2 : Day4Part(2, 4, 175) {
             eyr:2022
 
             iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719
-        """.trimIndent()
+        """.trimIndent())
     }
 
     override fun solve(input: List<Map<String, String>>): Long {

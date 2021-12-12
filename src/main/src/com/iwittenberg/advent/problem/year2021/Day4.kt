@@ -3,7 +3,7 @@ package com.iwittenberg.advent.problem.year2021
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 
-abstract class Day4Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
+abstract class Day4Part(part: Int, testCaseAnswer: List<Int>, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<Pair<List<Int>, List<Board>>, Int>(2021, 4, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): Pair<List<Int>, List<Board>> {
@@ -25,8 +25,8 @@ abstract class Day4Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         return Pair(numbers, boards)
     }
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
         7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
         22 13 17 11  0
@@ -46,12 +46,12 @@ abstract class Day4Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         18  8 23 26 20
         22 11 13  6  5
         2  0 12  3  7
-        """
+        """)
     }
 }
 
 @RunThis
-class Day4Part1 : Day4Part(1, 4512, 69579) {
+class Day4Part1 : Day4Part(1, listOf(4512), 69579) {
     override fun solve(input: Pair<List<Int>, List<Board>>): Int {
         val picks = input.first
         val boards = input.second
@@ -68,7 +68,7 @@ class Day4Part1 : Day4Part(1, 4512, 69579) {
 }
 
 @RunThis
-class Day4Part2 : Day4Part(2, 1924, 14877) {
+class Day4Part2 : Day4Part(2, listOf(1924), 14877) {
     override fun solve(input: Pair<List<Int>, List<Board>>): Int {
         val picks = input.first
         val boards = input.second

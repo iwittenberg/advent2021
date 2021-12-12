@@ -4,20 +4,18 @@ abstract class ProblemPart<T, A>(
     val year: Int,
     val day: Int,
     val part: Int,
-    val expectedTestCaseResult: A,
+    val expectedTestCaseResult: List<A>,
     val expectedRealAnswer: A?,
     private val usePartSpecificInput: Boolean = false
 ) {
     protected abstract fun solve(input: T): A
     protected abstract fun convertToInputType(rawInput: List<String>): T
-    protected abstract fun getTestCaseInput(): String
+    protected abstract fun getTestCaseInput(): List<String>
+    protected open fun getAdditionalTestCaseInputs() = emptyList<String>()
+    protected open fun getAdditionalTestCaseResults() = emptyList<A>()
 
-    fun solveSample() = solve(convertToInputType(getSampleInput()))
+    fun solveSample() = getTestCaseInput().map { it.parseAsInput() }.map { convertToInputType(it) }.map { solve(it) }
     fun solveReal() = solve(convertToInputType(getRealInput()))
-
-    private fun getSampleInput(): List<String> {
-        return getTestCaseInput().parseAsInput()
-    }
 
     private fun getRealInput(): List<String> {
         var path = "/inputs/${year}/day${day}"

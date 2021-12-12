@@ -5,7 +5,7 @@ import com.iwittenberg.advent.problem.RunThis
 
 private typealias Movement = Pair<Day2Part.Direction, Int>
 
-abstract class Day2Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
+abstract class Day2Part(part: Int, testCaseAnswer: List<Int>, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<Movement>, Int>(2021, 2, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     enum class Direction {
@@ -19,23 +19,23 @@ abstract class Day2Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         }
     }
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             forward 5
             down 5
             forward 8
             up 3
             down 8
             forward 2
-        """
+        """)
     }
 }
 
 @RunThis
-class Day2Part1 : Day2Part(1, 150, 1936494) {
+class Day2Part1 : Day2Part(1, listOf(150), 1936494) {
     override fun solve(input: List<Movement>): Int {
-        var horizontalPosition = 0;
-        var depth = 0;
+        var horizontalPosition = 0
+        var depth = 0
 
         input.forEach { movement ->
             when (movement.first) {
@@ -50,11 +50,11 @@ class Day2Part1 : Day2Part(1, 150, 1936494) {
 }
 
 @RunThis
-class Day2Part2 : Day2Part(2, 900, 1997106066) {
+class Day2Part2 : Day2Part(2, listOf(900), 1997106066) {
     override fun solve(input: List<Movement>): Int {
-        var horPos = 0;
-        var depth = 0;
-        var aim = 0;
+        var horPos = 0
+        var depth = 0
+        var aim = 0
 
         input.forEach { movement ->
             when (movement.first) {

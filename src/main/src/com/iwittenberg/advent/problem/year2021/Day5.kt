@@ -5,7 +5,7 @@ import com.iwittenberg.advent.problem.RunThis
 import kotlin.math.abs
 import kotlin.math.max
 
-abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
+abstract class Day5Part(part: Int, testCaseAnswer: List<Int>, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<Vent>, Int>(2021, 5, part, testCaseAnswer, previouslySubmittedAnswer) {
 
     override fun convertToInputType(rawInput: List<String>): List<Vent> {
@@ -18,8 +18,8 @@ abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
         }
     }
 
-    override fun getTestCaseInput(): String {
-        return """
+    override fun getTestCaseInput(): List<String> {
+        return listOf("""
             0,9 -> 5,9
             8,0 -> 0,8
             9,4 -> 3,4
@@ -30,7 +30,7 @@ abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
             3,4 -> 1,4
             0,0 -> 8,8
             5,5 -> 8,2
-        """.trimIndent()
+        """.trimIndent())
     }
 
     fun innerSolve(input: List<Vent>): Int {
@@ -47,7 +47,7 @@ abstract class Day5Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswe
 }
 
 @RunThis
-class Day5Part1 : Day5Part(1, 5, 4728) {
+class Day5Part1 : Day5Part(1, listOf(5), 4728) {
     override fun solve(input: List<Vent>): Int {
         val filtered = input.filter { it.extent1.first == it.extent2.first || it.extent1.second == it.extent2.second }
         return innerSolve(filtered)
@@ -55,7 +55,7 @@ class Day5Part1 : Day5Part(1, 5, 4728) {
 }
 
 @RunThis
-class Day5Part2 : Day5Part(2, 12, 17717) {
+class Day5Part2 : Day5Part(2, listOf(12), 17717) {
     override fun solve(input: List<Vent>) = innerSolve(input)
 }
 
