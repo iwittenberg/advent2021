@@ -41,9 +41,9 @@ class AdventOfCode {
     @TestFactory
     @Order(2)
     fun `real case - regression`(): List<DynamicContainer> {
-        return toRun.entries.map { daysByYear ->
+        return toRun.entries.mapNotNull { daysByYear ->
             val yearTests = daysByYear.value.map { partsByDay ->
-                val tests = partsByDay.value.map {
+                val tests = partsByDay.value.filter { it.expectedRealAnswer != null }.map {
                     val (result, time, throwable) = runSolveFunc(it)
 
                     DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
@@ -62,9 +62,17 @@ class AdventOfCode {
                         )
                     }
                 }
-                DynamicContainer.dynamicContainer("Day ${partsByDay.key}", tests)
+
+                when (tests.isNotEmpty()) {
+                    true -> DynamicContainer.dynamicContainer("Day ${partsByDay.key}", tests)
+                    else -> null
+                }
+            }.filterNotNull()
+
+            when (yearTests.isNotEmpty()) {
+                true -> DynamicContainer.dynamicContainer("${daysByYear.key}", yearTests)
+                else -> null
             }
-            DynamicContainer.dynamicContainer("${daysByYear.key}", yearTests)
         }
     }
 
@@ -104,7 +112,8 @@ class AdventOfCode {
 
     private fun failIfThrown(t: Throwable?) {
         if (t != null) {
-            fail("Test failed due to thrown exception, $t")
+            t.printStackTrace()
+            fail("Test failed due to thrown exception")
         }
     }
 

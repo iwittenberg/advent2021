@@ -2,18 +2,19 @@ package com.iwittenberg.advent.problem.year2021
 
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
-import com.iwittenberg.advent.util.MutableGrid
+import com.iwittenberg.advent.util.MutableIntGrid
 import com.iwittenberg.advent.util.Point2d
 import com.iwittenberg.advent.util.generateAllNeighbors
-import com.iwittenberg.advent.util.gridValue
+import com.iwittenberg.advent.util.valueAt
 import com.iwittenberg.advent.util.increment
+import com.iwittenberg.advent.util.mutableGridFromInput
 import com.iwittenberg.advent.util.set
 
 abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
-    ProblemPart<MutableGrid, Long>(2021, 11, part, testCaseAnswer, previouslySubmittedAnswer) {
+    ProblemPart<MutableIntGrid, Long>(2021, 11, part, testCaseAnswer, previouslySubmittedAnswer) {
 
-    override fun convertToInputType(rawInput: List<String>): MutableGrid {
-        return rawInput.map { row -> row.map { col -> col.digitToInt() }.toMutableList() }
+    override fun convertToInputType(rawInput: List<String>): MutableIntGrid {
+        return mutableGridFromInput(rawInput, Char::digitToInt)
     }
 
     override fun getTestCaseInput(): String {
@@ -31,13 +32,13 @@ abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
         """.trimIndent()
     }
 
-    fun charge(input: MutableGrid, point: Point2d, neighbors: List<Point2d>, flashed: MutableSet<Point2d>) {
+    fun charge(input: MutableIntGrid, point: Point2d, neighbors: List<Point2d>, flashed: MutableSet<Point2d>) {
         if (point in flashed) {
             return
         }
 
         input.increment(point)
-        if (input.gridValue(point) > 9) {
+        if (input.valueAt(point) > 9) {
             flashed.add(point)
             neighbors.forEach {
                 charge(input, it, input.generateAllNeighbors(it), flashed)
@@ -49,7 +50,7 @@ abstract class Day11Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
 
 @RunThis
 class Day11Part1 : Day11Part(1, 1656, 1667) {
-    override fun solve(input: MutableGrid): Long {
+    override fun solve(input: MutableIntGrid): Long {
         val points = input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
 
         return (0 until 100).sumOf { _ ->
@@ -64,7 +65,7 @@ class Day11Part1 : Day11Part(1, 1656, 1667) {
 
 @RunThis
 class Day11Part2 : Day11Part(2, 195, 488) {
-    override fun solve(input: MutableGrid): Long {
+    override fun solve(input: MutableIntGrid): Long {
         val points = input.flatMapIndexed { rowIdx, row -> row.indices.map { colIdx -> rowIdx to colIdx } }
 
         var i = 0
