@@ -1,7 +1,6 @@
 package com.iwittenberg.advent.problem.year2021
 
 import com.iwittenberg.advent.problem.ProblemPart
-import com.iwittenberg.advent.problem.RunThis
 
 abstract class Day12Part(part: Int, testCaseAnswer: Long, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<List<String>, Long>(2021, 12, part, testCaseAnswer, previouslySubmittedAnswer) {
@@ -16,7 +15,6 @@ abstract class Day12Part(part: Int, testCaseAnswer: Long, previouslySubmittedAns
     }
 }
 
-@RunThis
 class Day12Part1 : Day12Part(1, 1) {
     override fun solve(input: List<String>): Long {
         TODO("Not yet implemented")

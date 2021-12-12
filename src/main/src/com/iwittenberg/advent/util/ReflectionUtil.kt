@@ -9,9 +9,11 @@ private val reflections = Reflections("com.iwittenberg.advent")
 private val classes = reflections.getSubTypesOf(ProblemPart::class.java).filter { it.isAnnotationPresent(RunThis::class.java) }
 private val onlyThis = classes.filter { (it.annotations.find { annotation -> annotation is RunThis } as RunThis).andOnlyThis }
 
-fun getProblemPartsToRun(): Map<Pair<Int, Int>, List<ProblemPart<*, *>>> {
-    return when (onlyThis.size) {
+fun getProblemPartsToRun(): Map<Int, Map<Int, List<ProblemPart<*, *>>>> {
+   return when (onlyThis.size) {
         1 -> listOf(onlyThis.single().kotlin.createInstance() as ProblemPart<*, *>)
         else -> classes.map { it.kotlin.createInstance() as ProblemPart<*, *> }
-    }.sortedWith(ProblemPart.naturalOrder).groupBy { it.year to it.day }
+    }.sortedWith(ProblemPart.naturalOrder)
+       .groupBy { it.year }
+       .mapValues { entry -> entry.value.groupBy { it.day } }
 }

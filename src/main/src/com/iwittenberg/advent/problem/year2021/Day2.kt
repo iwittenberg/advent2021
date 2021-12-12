@@ -3,13 +3,14 @@ package com.iwittenberg.advent.problem.year2021
 import com.iwittenberg.advent.problem.ProblemPart
 import com.iwittenberg.advent.problem.RunThis
 
-typealias Movement = Pair<Direction, Int>
-enum class Direction {
-    FORWARD, DOWN, UP
-}
+private typealias Movement = Pair<Day2Part.Direction, Int>
 
 abstract class Day2Part(part: Int, testCaseAnswer: Int, previouslySubmittedAnswer: Int? = null) :
     ProblemPart<List<Movement>, Int>(2021, 2, part, testCaseAnswer, previouslySubmittedAnswer) {
+
+    enum class Direction {
+        FORWARD, DOWN, UP
+    }
 
     override fun convertToInputType(rawInput: List<String>): List<Movement> {
         return rawInput.map { line ->
