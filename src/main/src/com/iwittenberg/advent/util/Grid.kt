@@ -83,4 +83,5 @@ fun <A> Grid<A>.valueAt(
     return this[first][second]
 }
 
+@Suppress("unused")
 fun Grid<*>.printable() = this.joinToString("\n")
