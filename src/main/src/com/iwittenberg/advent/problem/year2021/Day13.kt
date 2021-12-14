@@ -72,8 +72,7 @@ abstract class Day13Part(part: Int, testCaseAnswer: List<Long>, previouslySubmit
 @RunThis
 class Day13Part1 : Day13Part(1, listOf(17), 638) {
     override fun solve(input: Pair<List<Point2d>, List<Pair<Char, Int>>>): Long {
-        val firstFold = input.second[0]
-        return fold(input.first.toSet(), firstFold).size.toLong()
+        return fold(input.first.toSet(), input.second[0]).size.toLong()
     }
 }
 
