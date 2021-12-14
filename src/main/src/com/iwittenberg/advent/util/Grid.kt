@@ -2,17 +2,35 @@ package com.iwittenberg.advent.util
 
 typealias Point2d = Pair<Int, Int>
 typealias Grid<A> = List<List<A>>
-typealias MutableGrid<A> = List<MutableList<A>>
+typealias MutableGrid<A> = MutableList<MutableList<A>>
 
 typealias IntGrid = Grid<Int>
 typealias MutableIntGrid = MutableGrid<Int>
+
+fun pointsFromInput(rawInput: List<String>, separator: String = ","): List<Point2d> {
+    return rawInput.map { point ->
+        val (x, y) = point.split(separator)
+        (x.toInt() to y.toInt())
+    }
+}
 
 fun <A> gridFromInput(rawInput: List<String>, valueConversionFunc: (Char) -> A): Grid<A> {
     return rawInput.map { row -> row.map { col -> valueConversionFunc.invoke(col) }.toList() }
 }
 
 fun <A> mutableGridFromInput(rawInput: List<String>, valueConversionFunc: (Char) -> A): MutableGrid<A> {
-    return rawInput.map { row -> row.map { col -> valueConversionFunc.invoke(col) }.toMutableList() }
+    return rawInput.map { row -> row.map { col -> valueConversionFunc.invoke(col) }.toMutableList() }.toMutableList()
+}
+
+fun <A> mutableGridFromPoints(points: Collection<Point2d>, presentVal: A, defaultVal: A): MutableGrid<A> {
+    val (x, y) = points.fold(0 to 0) { max, point ->
+        val newX = if (point.first > max.first) point.first else max.first
+        val newY = if (point.second > max.second) point.second else max.second
+        newX to newY
+    }
+
+    return MutableList(y+1) { MutableList(x+1) { defaultVal } }
+        .apply { points.forEach { this[it.second][it.first] = presentVal } }
 }
 
 fun Grid<*>.generateOrthogonalNeighbors(point: Point2d): List<Point2d> {
