@@ -6,6 +6,7 @@ import com.iwittenberg.advent.util.Point2d
 import com.iwittenberg.advent.util.mutableGridFromPoints
 import com.iwittenberg.advent.util.pointsFromInput
 import com.iwittenberg.advent.util.printable
+import kotlin.math.min
 
 abstract class Day13Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<Pair<List<Point2d>, List<Pair<Char, Int>>>, Long>(
@@ -59,9 +60,11 @@ abstract class Day13Part(part: Int, testCaseAnswer: List<Long>, previouslySubmit
             val axis = fold.first
             val number = fold.second
 
-            val newX = if (axis == 'x' && point.first > number) number - (point.first - number) else point.first
-            val newY = if (axis == 'y' && point.second > number) number - (point.second - number) else point.second
-            (newX to newY)
+            when(axis) {
+                'x' -> min(point.first, 2 * number - point.first) to point.second
+                'y' -> point.first to min(point.second, 2 * number - point.second)
+                else -> throw IllegalArgumentException("Invalid axis parameter")
+            }
         }.toSet()
     }
 }
