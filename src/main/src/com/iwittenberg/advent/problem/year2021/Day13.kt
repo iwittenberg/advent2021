@@ -5,6 +5,7 @@ import com.iwittenberg.advent.problem.RunThis
 import com.iwittenberg.advent.util.Point2d
 import com.iwittenberg.advent.util.mutableGridFromPoints
 import com.iwittenberg.advent.util.pointsFromInput
+import com.iwittenberg.advent.util.printable
 
 abstract class Day13Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
     ProblemPart<Pair<List<Point2d>, List<Pair<Char, Int>>>, Long>(

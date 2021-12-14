@@ -102,4 +102,4 @@ fun <A> Grid<A>.valueAt(
 }
 
 @Suppress("unused")
-fun Grid<*>.printable() = this.joinToString("\n")
+fun Grid<*>.printable() = this.joinToString("\n") { line -> line.joinToString(" ") }
