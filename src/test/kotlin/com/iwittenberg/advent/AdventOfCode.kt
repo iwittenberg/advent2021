@@ -26,7 +26,6 @@ class AdventOfCode {
             val yearTests = daysByYear.value.map { partsByDay ->
                 val tests = partsByDay.value.map {
                     val (result, time, throwable) = runSolveFunc(it, ProblemPart<*, *>::solveSample)
-
                     DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
                         failIfThrown(throwable)
                         assertEquals(it.expectedTestCaseResult, result, "Sample case didn't match")
@@ -42,9 +41,11 @@ class AdventOfCode {
     @Order(2)
     fun `real case - regression`(): List<DynamicContainer> {
         return toRun.entries.mapNotNull { daysByYear ->
+            var totalTime = 0L
             val yearTests = daysByYear.value.map { partsByDay ->
                 val tests = partsByDay.value.filter { it.expectedRealAnswer != null }.map {
                     val (result, time, throwable) = runSolveFunc(it)
+                    totalTime += time
 
                     DynamicTest.dynamicTest("Part ${it.part} - ${time / 1e6}ms") {
                         failIfThrown(throwable)
@@ -70,7 +71,7 @@ class AdventOfCode {
             }.filterNotNull()
 
             when (yearTests.isNotEmpty()) {
-                true -> DynamicContainer.dynamicContainer("${daysByYear.key}", yearTests)
+                true -> DynamicContainer.dynamicContainer("${daysByYear.key} - ${totalTime / 1e6}ms", yearTests)
                 else -> null
             }
         }
