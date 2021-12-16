@@ -1,11 +1,17 @@
 package com.iwittenberg.advent.util
 
+import java.util.PriorityQueue
+import kotlin.math.abs
+
 typealias Point2d = Pair<Int, Int>
 typealias Grid<A> = List<List<A>>
 typealias MutableGrid<A> = MutableList<MutableList<A>>
 
 typealias IntGrid = Grid<Int>
 typealias MutableIntGrid = MutableGrid<Int>
+
+@Suppress("unused")
+fun Grid<*>.printable() = this.joinToString("\n") { line -> line.joinToString("") }
 
 fun pointsFromInput(rawInput: List<String>, separator: String = ","): List<Point2d> {
     return rawInput.map { point ->
@@ -31,6 +37,22 @@ fun <A> mutableGridFromPoints(points: Collection<Point2d>, presentVal: A, defaul
 
     return MutableList(y+1) { MutableList(x+1) { defaultVal } }
         .apply { points.forEach { this[it.second][it.first] = presentVal } }
+}
+
+fun <A> gridOf(rows: Int, cols: Int, init: (point: Point2d) -> A): Grid<A> {
+    return List(rows) { row ->
+        List(cols) { col ->
+            init(row to col)
+        }
+    }
+}
+
+fun <A> mutableGridOf(rows: Int, cols: Int, init: (point: Point2d) -> A): MutableGrid<A> {
+    return MutableList(rows) { row ->
+        MutableList(cols) { col ->
+            init(row to col)
+        }
+    }
 }
 
 fun Grid<*>.generateOrthogonalNeighbors(point: Point2d): List<Point2d> {
@@ -101,5 +123,54 @@ fun <A> Grid<A>.valueAt(
     return this[first][second]
 }
 
-@Suppress("unused")
-fun Grid<*>.printable() = this.joinToString("\n") { line -> line.joinToString(" ") }
+fun <T, R> Grid<T>.mapPoints(transform: (T) -> R): Grid<R> {
+    return this.mapPointsIndexed { _, point -> transform(point) }
+}
+
+fun <T, R> Grid<T>.mapPointsIndexed(transform: (Point2d, T) -> R): Grid<R> {
+    return this.mapIndexed { row, values ->
+        values.mapIndexed { col, value ->
+            transform(row to col, value)
+        }
+    }
+}
+
+
+fun IntGrid.aStar(start: Point2d, end: Point2d, h: (Point2d, Point2d) -> Int = ::manhattanDistance): Pair<List<Point2d>, Int> {
+    val score = mutableMapOf<Point2d, Int>()
+    val prev = mutableMapOf<Point2d, Point2d>()
+    val hscore = mutableMapOf<Point2d, Int>()
+    val pq = PriorityQueue { p1: Pair<Point2d, Int>, p2: Pair<Point2d, Int> -> p1.second.compareTo(p2.second) }
+    score[start] = 0
+    hscore[start] = h(start, end)
+    pq.add(start to hscore[start]!!)
+
+    while (!pq.isEmpty()) {
+        val head = pq.remove()
+        if (head.second != hscore.getOrDefault(head.first, Int.MAX_VALUE)) continue
+        if (head.first == end) break
+
+        this.generateOrthogonalNeighbors(head.first).forEach {
+            val newScore = score.getOrDefault(head.first, Int.MAX_VALUE) + this.valueAt(it)
+            if (newScore < score.getOrDefault(it, Int.MAX_VALUE)) {
+                score[it] = newScore
+                prev[it] = head.first
+                hscore[it] = newScore + h(it, end)
+                pq.add(it to hscore[it]!!)
+            }
+        }
+    }
+
+    val path = mutableListOf<Point2d>()
+    var current = end
+    do {
+        path.add(current)
+        current = prev[current]!!
+    } while (current != start)
+
+    return path.reversed() to score[end]!!
+}
+
+fun manhattanDistance(first: Point2d, second: Point2d): Int {
+    return abs(first.first - second.first) + abs(first.second + second.second)
+}
