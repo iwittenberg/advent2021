@@ -5,8 +5,12 @@ import com.iwittenberg.advent.problem.RunThis
 import com.iwittenberg.advent.util.IntGrid
 import com.iwittenberg.advent.util.Utils
 import com.iwittenberg.advent.util.aStar
+import com.iwittenberg.advent.util.numCols
 import com.iwittenberg.advent.util.gridFromInput
 import com.iwittenberg.advent.util.gridOf
+import com.iwittenberg.advent.util.lastColIndex
+import com.iwittenberg.advent.util.lastRowIndex
+import com.iwittenberg.advent.util.numRows
 import com.iwittenberg.advent.util.valueAt
 
 abstract class Day15Part(part: Int, testCaseAnswer: List<Long>, previouslySubmittedAnswer: Long? = null) :
@@ -33,8 +37,7 @@ abstract class Day15Part(part: Int, testCaseAnswer: List<Long>, previouslySubmit
         )
     }
 
-
-    override fun solve(input: IntGrid) = input.aStar(0 to 0, input.size - 1 to input[0].size - 1).second.toLong()
+    override fun solve(input: IntGrid) = input.aStar(0 to 0, input.lastRowIndex() to input.lastColIndex()).second.toLong()
 }
 
 @RunThis
@@ -45,8 +48,8 @@ class Day15Part2 : Day15Part(2, listOf(315), 2835) {
 
     override fun convertToInputType(rawInput: List<String>): IntGrid {
         val input = super.convertToInputType(rawInput)
-        val rows = input.size
-        val cols = input[0].size
+        val rows = input.numRows()
+        val cols = input.numCols()
 
         return gridOf(rows * 5, cols * 5) { point ->
             val (offsetRows, originalRow) = Utils.divMod(point.first, rows)

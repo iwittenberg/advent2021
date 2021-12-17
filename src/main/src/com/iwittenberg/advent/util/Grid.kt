@@ -12,6 +12,10 @@ typealias MutableIntGrid = MutableGrid<Int>
 
 @Suppress("unused")
 fun Grid<*>.printable() = this.joinToString("\n") { line -> line.joinToString("") }
+fun Grid<*>.numRows() = this.size
+fun Grid<*>.numCols() = this[0].size
+fun Grid<*>.lastRowIndex() = this.size - 1
+fun Grid<*>.lastColIndex() = this[0].size - 1
 
 fun pointsFromInput(rawInput: List<String>, separator: String = ","): List<Point2d> {
     return rawInput.map { point ->
